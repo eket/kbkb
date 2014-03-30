@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title>Compiled Elm</title><style type="text/css">a:link {text-decoration: none; color: rgb(15,102,230);}
+a:visited {text-decoration: none}
+a:active {text-decoration: none}
+a:hover {text-decoration: underline; color: rgb(234,21,122);}</style></head><body><script type="text/javascript" src="http://elm-lang.org/elm-runtime.js"></script><script type="text/javascript">Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm)
+                {
+                  "use strict";
+                  _elm.Main = _elm.Main || {};
+                  if (_elm.Main.values)
+                  return _elm.Main.values;
+                  var _N = Elm.Native,
+                      _U = _N.Utils.make(_elm),
+                      _L = _N.List.make(_elm),
+                      _E = _N.Error.make(_elm),
+                      _J = _N.JavaScript.make(_elm),
+                      $moduleName = "Main";
+                  var Basics = Elm.Basics.make(_elm);
+                  var Char = Elm.Char.make(_elm);
+                  var Color = Elm.Color.make(_elm);
+                  var Graphics = Graphics || {};
+                  Graphics.Collage = Elm.Graphics.Collage.make(_elm);
+                  var Graphics = Graphics || {};
+                  Graphics.Element = Elm.Graphics.Element.make(_elm);
+                  var Keyboard = Elm.Keyboard.make(_elm);
+                  var List = Elm.List.make(_elm);
+                  var Maybe = Elm.Maybe.make(_elm);
+                  var Native = Native || {};
+                  Native.Ports = Elm.Native.Ports.make(_elm);
+                  var Signal = Elm.Signal.make(_elm);
+                  var String = Elm.String.make(_elm);
+                  var Text = Elm.Text.make(_elm);
+                  var Time = Elm.Time.make(_elm);
+                  var Window = Elm.Window.make(_elm);
+                  var _op = {};
+                  var input = function ()
+                              {
+                                var delta = A2(Signal.lift,
+                                               function (t)
+                                               {
+                                                 return t / (1000.0 / 60.0);
+                                               },
+                                               Time.fps(60));
+                                return A2(Signal.sampleOn,
+                                          delta,
+                                          A3(Signal.lift2,
+                                             F2(function (v0,v1)
+                                                {
+                                                  return {ctor: "_Tuple2", _0: v0, _1: v1};
+                                                }),
+                                             delta,
+                                             Keyboard.lastPressed));
+                              }();
+                  var key_rows = A2(List.map,
+                                    String.toList,
+                                    _J.toList(["1234567890-=",
+                                               "QWERTYUIOP[",
+                                               "ASDFGHJKL;",
+                                               "ZXCVBNM,. "]));
+                  var key_found = function (k)
+                                  {
+                                    return A2(List.any,
+                                              function (c$)
+                                              {
+                                                return _U.eq(k,Char.toCode(c$));
+                                              },
+                                              List.concat(key_rows));
+                                  };
+                  var target = F2(function (k,m)
+                                  {
+                                    return key_found(k) ? _U.replace([["target",k]],m) : m;
+                                  });
+                  var unit = 100;
+                  var accel = 2.0e-3 * unit;
+                  var max_vel = 2.0e-2 * unit;
+                  var vmulf = F2(function (_v0,f)
+                                 {
+                                   return function ()
+                                          {
+                                            return {_: {}, x: _v0.x * f, y: _v0.y * f};
+                                          }();
+                                 });
+                  var vsub = F2(function (v1,v2)
+                                {
+                                  return {_: {}, x: v1.x - v2.x, y: v1.y - v2.y};
+                                });
+                  var vadd = F2(function (v1,v2)
+                                {
+                                  return {_: {}, x: v1.x + v2.x, y: v1.y + v2.y};
+                                });
+                  var vel2pos = F2(function (t,m)
+                                   {
+                                     return _U.replace([["pos",A2(vadd,m.pos,A2(vmulf,m.vel,t))]],
+                                                       m);
+                                   });
+                  var vabs = function (_v2)
+                             {
+                               return function ()
+                                      {
+                                        return Basics.sqrt(Math.pow(_v2.x,2) + Math.pow(_v2.y,2));
+                                      }();
+                             };
+                  var v2p = function (_v4)
+                            {
+                              return function ()
+                                     {
+                                       return {ctor: "_Tuple2", _0: _v4.x, _1: _v4.y};
+                                     }();
+                            };
+                  var v = function (_v6)
+                          {
+                            return function ()
+                                   {
+                                     switch (_v6.ctor)
+                                     {case
+                                      "_Tuple2" :
+                                        return {_: {}, x: _v6._0, y: _v6._1};}
+                                     _E.Case($moduleName,"on line 12, column 13 to 25");
+                                   }();
+                          };
+                  var p = {_: {}, acc: v({ctor: "_Tuple2", _0: 0, _1: 0}), pos: v({ctor: "_Tuple2", _0: 0, _1: 0}), target: 32, vel: v({ctor: "_Tuple2", _0: 0, _1: 0})};
+                  var make_row = F4(function (n,dx,x,y)
+                                    {
+                                      return _U.cmp(n,
+                                                    1) > 0 ? {ctor: "::", _0: v({ctor: "_Tuple2", _0: x, _1: y}), _1: A4(make_row,
+                                                                                                                         n - 1,
+                                                                                                                         dx,
+                                                                                                                         x + dx,
+                                                                                                                         y)} : _J.toList([v({ctor: "_Tuple2", _0: x, _1: y})]);
+                                    });
+                  var grid = A2(List.map,
+                                function (_v10)
+                                {
+                                  return function ()
+                                         {
+                                           switch (_v10.ctor)
+                                           {case
+                                            "_Tuple2" :
+                                              return A4(make_row,
+                                                        _v10._0,
+                                                        unit,
+                                                        0 - unit * (_v10._0 / 2),
+                                                        unit * _v10._1);}
+                                           _E.Case($moduleName,"on line 32, column 24 to 66");
+                                         }();
+                                },
+                                _J.toList([{ctor: "_Tuple2", _0: 12, _1: 2},
+                                           {ctor: "_Tuple2", _0: 11, _1: 1},
+                                           {ctor: "_Tuple2", _0: 10, _1: 0},
+                                           {ctor: "_Tuple2", _0: 9, _1: -1}]));
+                  var max_x = List.last(List.head(grid)).x;
+                  var min_x = List.head(List.head(grid)).x;
+                  var max_y = List.last(List.head(grid)).y;
+                  var min_y = List.last(List.last(grid)).y;
+                  var bounds = function (m)
+                               {
+                                 return _U.replace([["pos",
+                                                     {_: {}, x: A3(Basics.clamp,
+                                                                   min_x,
+                                                                   max_x,
+                                                                   m.pos.x), y: A3(Basics.clamp,
+                                                                                   min_y,
+                                                                                   max_y,
+                                                                                   m.pos.y)}]],
+                                                   m);
+                               };
+                  var key_to_coord = function (k$)
+                                     {
+                                       return function ()
+                                              {
+                                                var fn = F2(function (n,ks)
+                                                            {
+                                                              return function ()
+                                                                     {
+                                                                       switch (ks.ctor)
+                                                                       {case
+                                                                        "::" :
+                                                                          return _U.eq(k$,
+                                                                                       Char.toCode(ks._0)) ? n : A2(fn,
+                                                                                                                    n - 1,
+                                                                                                                    ks._1);}
+                                                                       return 0;
+                                                                     }();
+                                                            });
+                                                var ckr = List.concat(key_rows);
+                                                var len = List.length(ckr);
+                                                return List.head(A2(List.drop,
+                                                                    len - A2(fn,len,ckr),
+                                                                    List.concat(grid)));
+                                              }();
+                                     };
+                  var stop_if_target = function (m)
+                                       {
+                                         return _U.eq(m.target,32) ? _U.replace([["vel",
+                                                                                  {_: {}, x: 0, y: 0}]],
+                                                                                m) : function ()
+                                                                                     {
+                                                                                       var tpos = key_to_coord(m.target);
+                                                                                       return _U.cmp(vabs(A2(vsub,
+                                                                                                             tpos,
+                                                                                                             m.pos)),
+                                                                                                     2.0) < 0 ? _U.replace([["target",
+                                                                                                                             32],
+                                                                                                                            ["pos",
+                                                                                                                             tpos]],
+                                                                                                                           m) : m;
+                                                                                     }();
+                                       };
+                  var target2acc = F2(function (t,m)
+                                      {
+                                        return _U.eq(m.target,32) ? _U.replace([["acc",
+                                                                                 {_: {}, x: 0, y: 0}]],
+                                                                               m) : function ()
+                                                                                    {
+                                                                                      var tpos = key_to_coord(m.target);
+                                                                                      var d = vabs(A2(vsub,
+                                                                                                      tpos,
+                                                                                                      m.pos));
+                                                                                      var dir = A2(vmulf,
+                                                                                                   A2(vsub,
+                                                                                                      tpos,
+                                                                                                      m.pos),
+                                                                                                   1.0 / d);
+                                                                                      var new_acc = A2(vmulf,
+                                                                                                       dir,
+                                                                                                       max_vel);
+                                                                                      var acc_ratio = vabs(new_acc) / accel;
+                                                                                      return _U.replace([["acc",
+                                                                                                          _U.cmp(acc_ratio,
+                                                                                                                 1.0) > 0 ? A2(vmulf,
+                                                                                                                               new_acc,
+                                                                                                                               1.0 / acc_ratio) : new_acc]],
+                                                                                                        m);
+                                                                                    }();
+                                      });
+                  var acc2vel = F2(function (t,m)
+                                   {
+                                     return _U.eq(m.target,32) ? _U.replace([["vel",
+                                                                              {_: {}, x: 0, y: 0}]],
+                                                                            m) : function ()
+                                                                                 {
+                                                                                   var new_vel = A2(vadd,
+                                                                                                    m.vel,
+                                                                                                    A2(vmulf,
+                                                                                                       m.acc,
+                                                                                                       t));
+                                                                                   var vel_ratio = vabs(new_vel) / max_vel;
+                                                                                   var tpos = key_to_coord(m.target);
+                                                                                   return _U.replace([["vel",
+                                                                                                       _U.cmp(vel_ratio,
+                                                                                                              1.0) > 0 ? A2(vmulf,
+                                                                                                                            new_vel,
+                                                                                                                            1.0 / vel_ratio) : new_vel]],
+                                                                                                     m);
+                                                                                 }();
+                                   });
+                  var step = F2(function (_v17,m)
+                                {
+                                  return function ()
+                                         {
+                                           switch (_v17.ctor)
+                                           {case
+                                            "_Tuple2" :
+                                              return function ($)
+                                                     {
+                                                       return bounds(vel2pos(_v17._0)(acc2vel(_v17._0)(target2acc(_v17._0)(stop_if_target(target(_v17._1)($))))));
+                                                     }(m);}
+                                           _E.Case($moduleName,"on line 104, column 18 to 94");
+                                         }();
+                                });
+                  var render = F2(function (_v21,p1)
+                                  {
+                                    return function ()
+                                           {
+                                             switch (_v21.ctor)
+                                             {case
+                                              "_Tuple2" :
+                                                return function ()
+                                                       {
+                                                         var $ = {ctor: "_Tuple2", _0: Basics.toFloat(_v21._0), _1: Basics.toFloat(_v21._1)},
+                                                             w = $._0,
+                                                             h = $._1;
+                                                         return A2(Graphics.Collage.collage,
+                                                                   _v21._0,
+                                                                   _v21._1)(List.concat(_J.toList([_J.toList([Graphics.Collage.filled(Color.black)(A2(Graphics.Collage.rect,
+                                                                                                                                                      w,
+                                                                                                                                                      h))]),
+                                                                                                   List.map(function (_v25)
+                                                                                                            {
+                                                                                                              return function ()
+                                                                                                                     {
+                                                                                                                       return Graphics.Collage.move({ctor: "_Tuple2", _0: _v25.x, _1: _v25.y})(Graphics.Collage.outlined(Graphics.Collage.dashed(A3(Color.rgb,
+                                                                                                                                                                                                                                                    150,
+                                                                                                                                                                                                                                                    150,
+                                                                                                                                                                                                                                                    150)))(A2(Graphics.Collage.rect,
+                                                                                                                                                                                                                                                              unit * 0.8,
+                                                                                                                                                                                                                                                              unit * 0.8)));
+                                                                                                                     }();
+                                                                                                            })(List.concat(grid)),
+                                                                                                   _J.toList([_U.eq(p1.target,
+                                                                                                                    32) ? Graphics.Collage.filled(Color.black)(A2(Graphics.Collage.rect,
+                                                                                                                                                                  0,
+                                                                                                                                                                  0)) : Graphics.Collage.move(v2p(key_to_coord(p1.target)))(Graphics.Collage.filled(A3(Color.rgb,
+                                                                                                                                                                                                                                                       0,
+                                                                                                                                                                                                                                                       100,
+                                                                                                                                                                                                                                                       0))(A2(Graphics.Collage.rect,
+                                                                                                                                                                                                                                                              10,
+                                                                                                                                                                                                                                                              10))),
+                                                                                                              Graphics.Collage.move(v2p(p1.pos))(Graphics.Collage.filled(Color.white)(A2(Graphics.Collage.rect,
+                                                                                                                                                                                         unit * 0.4,
+                                                                                                                                                                                         unit * 0.4))),
+                                                                                                              Graphics.Collage.move(v2p(p1.pos))(Graphics.Collage.toForm(A3(Graphics.Element.image,
+                                                                                                                                                                            40,
+                                                                                                                                                                            40,
+                                                                                                                                                                            "ply1.svg"))),
+                                                                                                              Graphics.Collage.traced(Graphics.Collage.solid(Color.red))(A2(Graphics.Collage.segment,
+                                                                                                                                                                            v2p(p1.pos),
+                                                                                                                                                                            v2p(vsub(p1.pos)(A2(vmulf,
+                                                                                                                                                                                                p1.acc,
+                                                                                                                                                                                                100.0)))))])])));
+                                                       }();}
+                                             _E.Case($moduleName,"between lines 110 and 131");
+                                           }();
+                                  });
+                  var main = A3(Signal.lift2,
+                                render,
+                                Window.dimensions,
+                                A3(Signal.foldp,step,p,input));
+                  var V = F2(function (a,b)
+                             {
+                               return {_: {}, x: a, y: b};
+                             });
+                  _elm.Main.values = {_op: _op, v: v, v2p: v2p, vabs: vabs, vadd: vadd, vsub: vsub, vmulf: vmulf, p: p, unit: unit, accel: accel, max_vel: max_vel, make_row: make_row, grid: grid, max_x: max_x, min_x: min_x, max_y: max_y, min_y: min_y, key_rows: key_rows, key_found: key_found, key_to_coord: key_to_coord, target: target, stop_if_target: stop_if_target, target2acc: target2acc, acc2vel: acc2vel, vel2pos: vel2pos, bounds: bounds, step: step, render: render, input: input, main: main, V: V};
+                  return _elm.Main.values;
+                };</script><script type="text/javascript">var runningElmModule = Elm.fullscreen(Elm.Main)</script></body><script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-25827182-1']);
+_gaq.push(['_setDomainName', 'elm-lang.org']);
+_gaq.push(['_trackPageview']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script></html>
