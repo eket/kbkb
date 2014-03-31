@@ -103,30 +103,25 @@ bounds m = {m | pos <- { x = clamp min_x max_x m.pos.x
 
 step (t, k) m = (bounds . vel2pos t . acc2vel t . target2acc t . stop_if_target . target k) m
 
-
-
 ------
 render (w',h') p1 =
   let (w,h) = (toFloat w', toFloat h')
   in collage w' h' <| concat [
-    [ rect w h |> filled black],
-    (map (\{x, y} -> rect (unit*0.8) (unit*0.8)
-                  |> outlined (dashed (rgb 150 150 150))
-                  |> move (x, y)
-    ) <| concat grid),
+    [toForm (image 1242 400 "https://dl.dropboxusercontent.com/u/18290040/maptt.png") |> move (-50,52)],
+    --(map (\{x, y} -> rect (unit*0.8) (unit*0.8) |> outlined (dotted (rgb 150 150 150)) |> move (x, y)) <| concat grid),
     [  
        (if p1.target == 32 
         then rect 0 0 |> filled black 
-        else rect 10 10 |> filled (rgb 0 100 0) |> move (v2p <| key_to_coord p1.target))
+        else circle 30 |> outlined (dashed (rgb 0 255 88)) |> move (v2p <| key_to_coord p1.target))
       --,(if p1.target == 32 
       --  then rect 0 0 |> filled black 
       --  else traced (solid white) <| segment (v2p p1.pos) (v2p <| key_to_coord p1.target))
-      ,rect (unit*0.4) (unit*0.4) |> filled white |> move (v2p p1.pos)
-      ,toForm (image 40 40 "ply1.svg") |> move (v2p p1.pos)
+      --,rect (unit*0.4) (unit*0.4) |> filled white |> move (v2p p1.pos)
+      ,toForm (image 50 50 "https://dl.dropboxusercontent.com/u/18290040/plaball.gif") |> rotate 33 |> move (v2p p1.pos)
       --,traced (solid blue) <| segment (v2p p1.pos) (v2p <| vadd p1.pos <| vmulf p1.vel 100.0)
-      ,traced (solid red) <| segment (v2p p1.pos) (v2p <| vsub p1.pos <| vmulf p1.acc 100.0)
+      ,traced (solid green) <| segment (v2p p1.pos) (v2p <| vsub p1.pos <| vmulf p1.acc 100.0)
       --,toForm (plainText (String.fromList ((Char.fromCode p1.target)::(concat key_rows))))
-      --, toForm <| plainText <| String.fromList <| [Char.fromCode c]
+      --,toForm <| plainText <| String.fromList <| [Char.fromCode c]
     ]
   ]
      
